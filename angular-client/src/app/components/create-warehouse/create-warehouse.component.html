@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Hi there!</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <label for="clientInput" class="form-label">Cliente</label>
+    <input type="text" class="form-control" id="clientInput" [(ngModel)]="model.client">
+  </div>
+  <div class="row">
+    <label for="familyInput" class="form-label">Tipo</label>
+    <select class="form-control" id="familyInput" [(ngModel)]="model.family">
+      <option value="EST">EST</option>
+      <option value="ROB">ROB</option>
+    </select>
+  </div>
+  <div class="row">
+    <label for="sizeInput" class="form-label">Tamaño</label>
+    <input type="number" class="form-control" id="sizeInput" [(ngModel)]="model.size">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="save()">Save</button>
+</div>

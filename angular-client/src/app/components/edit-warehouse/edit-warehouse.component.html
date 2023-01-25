@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="row">
+    <div class="col-6 mr-5">
+      <div class="row">
+        <label class="form-label">Cliente</label>
+        <input type="text" [(ngModel)]="model.client">
+      </div>
+      <div class="row">
+        <label for="familyInput" class="form-label">Tipo</label>
+        <select class="form-control" id="familyInput" [(ngModel)]="model.family">
+          <option value="EST">EST</option>
+          <option value="ROB">ROB</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="sizeInput" class="form-label">Tamaño</label>
+        <input  type="number" class="form-control" id="sizeInput" [(ngModel)]="model.size">
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-1">
+            <button (click)="save()">Registrar</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <table id="warehouse-list" class=" table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" sortable="id">Installación</th>
+              <th scope="col" sortable="type">Tipo</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rackList">
+              <td>{{item.id}}</td>
+              <td>{{item.type}}</td>
+              <td><a class="action-link" (click)="delete(item.id)">Eliminar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-1">
+            <button (click)="openWarehouseModal()" [disabled]="cannotAdd">Añadir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

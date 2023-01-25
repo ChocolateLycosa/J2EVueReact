@@ -1,0 +1,33 @@
+<div class="contaiiner">
+  <div class="row">
+    <table id="warehouse-list" class=" table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" sortable="item.client">Cliente</th>
+          <th scope="col" sortable="item.id">Almacén</th>
+          <th scope="col" sortable="item.family">Tipo</th>
+          <th scope="col" sortable="item.size">Tamaño</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of list">
+          <td>{{item.client}}</td>
+          <td>{{item.id}}</td>
+          <td>{{item.family}}</td>
+          <td>{{item.size}}</td>
+          <td>
+            <a class="action-link" [routerLink]="['/warehouse', item.id, true]">Editar</a>
+            <a class="action-link" href="#" (click)="deleteWarehouse($event, item.id)">Eliminar</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-1">
+      <button (click)="openWarehouseModal()">Añadir</button>
+    </div>
+  </div>
+</div>

@@ -1,29 +1,44 @@
 package com.example.poc.entites;
 
+import java.util.UUID;
+
 import org.springframework.data.relational.core.mapping.Table;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 
 @Entity
 @Table("Racks")
 public class Racks {
     @Id
-    private Long id;
-    private Long warehouse_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(columnDefinition = "integer", nullable = false)
+    private int warehouseId;
+
+    public int getWarehouseId() {
+        return warehouseId;
+    }
+    public void setWarehouseId(int warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    @Column(columnDefinition = "varchar(36)", nullable = false)
     private String uuid;
+
+    @Column(columnDefinition = "char(1)", nullable = false)
     private Character type;
-    public Long getId() {
+
+    public int getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
-    }
-    public Long getWarehouse_id() {
-        return warehouse_id;
-    }
-    public void setWarehouse_id(Long warehouse_id) {
-        this.warehouse_id = warehouse_id;
     }
     public String getUuid() {
         return uuid;
@@ -36,5 +51,10 @@ public class Racks {
     }
     public void setType(Character type) {
         this.type = type;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        setUuid(UUID.randomUUID().toString());
     }
 }

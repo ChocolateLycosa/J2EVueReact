@@ -1,15 +1,18 @@
 package com.example.poc.controllers;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,7 +23,6 @@ import com.example.poc.repositories.RackRepository;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("racks")
 public class RackController {
-
 
 	/**
 	 * Crud repository for Racks.
@@ -33,12 +35,12 @@ public class RackController {
 	 * @throws Exception When id does not correspond to any existing entity.
 	 */
 	@GetMapping("/{id}")
-	public Racks get(Long id) throws ResponseStatusException {
-		if (id <= 0){
+	public Racks get(@PathVariable int id) throws ResponseStatusException {
+		if (id <= 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
 		}
 		Optional<Racks> res = this.repo.findById(id);
-		if (!res.isPresent()){
+		if (!res.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-existing entity");
 		}
 		return res.get();
@@ -59,8 +61,8 @@ public class RackController {
 	 * @throws Exception When the provided entity isn't valid for creation.
 	 */
 	@PostMapping
-	public Racks post(@RequestBody Racks rack) throws ResponseStatusException{
-		if (rack == null || rack.getId() == null || rack.getId() != 0){
+	public Racks post(@RequestBody Racks rack) throws ResponseStatusException {
+		if (rack == null || rack.getId() != 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid entity");
 		}
 		Racks res = repo.saveAndFlush(rack);
@@ -72,12 +74,30 @@ public class RackController {
 	 * @return Modified Rack.
 	 * @throws Exception When the provided entity isn't valid for creation.
 	 */
-	@PatchMapping
-	public Racks patch(@RequestBody Racks rack) throws ResponseStatusException {
-		if (rack == null || rack.getId() == null || rack.getId() == 0){
+	@PutMapping
+	public Racks put(@RequestBody Racks rack) throws ResponseStatusException {
+		if (rack == null || rack.getId() == 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid entity");
 		}
 		Racks res = repo.saveAndFlush(rack);
+		return res;
+	}
+
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable int id) throws ResponseStatusException {
+		if (id <= 0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
+		}
+		repo.deleteById(id);
+		return;
+	}
+
+	@GetMapping("/warehouse/{id}")
+	public List<Racks> getByWarehouse(@PathVariable int id) throws ResponseStatusException {
+		if (id <= 0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
+		}
+		List<Racks> res = this.repo.findByWarehouseId(id);
 		return res;
 	}
 }

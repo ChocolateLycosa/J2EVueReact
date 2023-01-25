@@ -6,10 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class WarehouseController {
 	 * @throws Exception When id does not correspond to any existing entity.
 	 */
 	@GetMapping("/{id}")
-	public Warehouses get(@PathVariable Long id) throws ResponseStatusException {
+	public Warehouses get(@PathVariable int id) throws ResponseStatusException {
 		if (id <= 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
 		}
@@ -60,7 +61,7 @@ public class WarehouseController {
 	 */
 	@PostMapping
 	public Warehouses post(@RequestBody Warehouses warehouse) throws ResponseStatusException {
-		if (warehouse == null || warehouse.getId() == null || warehouse.getId() != 0) {
+		if (warehouse == null || warehouse.getId() != 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
 		}
 		Warehouses res = repo.saveAndFlush(warehouse);
@@ -72,12 +73,35 @@ public class WarehouseController {
 	 * @return Modified Warehouse.
 	 * @throws Exception When the provided entity isn't valid for creation.
 	 */
-	@PatchMapping
-	public Warehouses patch(@RequestBody Warehouses warehouse) throws ResponseStatusException {
-		if (warehouse == null || warehouse.getId() == null || warehouse.getId() == 0) {
+	@PutMapping
+	public Warehouses put(@RequestBody Warehouses warehouse) throws ResponseStatusException {
+		if (warehouse == null || warehouse.getId() == 0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
 		}
 		Warehouses res = repo.saveAndFlush(warehouse);
 		return res;
+	}
+
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable int id) throws ResponseStatusException {
+		if (id <= 0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
+		}
+		repo.deleteById(id);
+		return;
+	}
+
+	@GetMapping("/combinations/{id}")
+	public List<String> getCombinations(@PathVariable int id) throws ResponseStatusException {
+		if (id <= 0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid identifier");
+		}
+		Optional<Warehouses> res = this.repo.findById(id);
+		if (!res.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-existing entity");
+		}
+		Warehouses aux = res.get();
+		List<String> list = Warehouses.getCombinations(aux);
+		return list;
 	}
 }
